@@ -2,15 +2,15 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Message {
-    src: String,
-    dest: String,
-    body: Body
+    pub src: String,
+    pub dest: String,
+    pub body: Body
 }
 
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
-enum Body {
+pub enum Body {
     init(InitMsg),
     init_ok(InitOkMsg),
     error(ErrorMsg),
@@ -21,36 +21,36 @@ enum Body {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-struct InitMsg {
-    msg_id: i32,
-    node_id: String,
-    node_ids: Vec<String>,
+pub struct InitMsg {
+    pub msg_id: i32,
+    pub node_id: String,
+    pub node_ids: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-struct InitOkMsg {
-    in_reply_to: i32,
+pub struct InitOkMsg {
+    pub in_reply_to: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-struct ErrorMsg {
-    in_reply_to: i32,
-    code: i32,
-    text: String,
+pub struct ErrorMsg {
+    pub in_reply_to: i32,
+    pub code: i32,
+    pub text: String,
 }
 
 
 // -- ECHO -- 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct EchoMsg {
-    msg_id: Option<i32>,
-    in_reply_to: Option<i32>,
-    echo: String
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct EchoMsg {
+    pub msg_id: Option<i32>,
+    pub in_reply_to: Option<i32>,
+    pub echo: String
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-struct EchoOkMsg {
-    msg_id: Option<i32>,
-    in_reply_to: Option<i32>,
-    echo: String
+pub struct EchoOkMsg {
+    pub msg_id: Option<i32>,
+    pub in_reply_to: Option<i32>,
+    pub echo: String
 }
