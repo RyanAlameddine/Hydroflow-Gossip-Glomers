@@ -4,7 +4,7 @@ use hydroflow::{tokio, hydroflow_syntax, serde_json::{self, from_str}};
 use protocol::{GenerateMsg, GenerateOkMsg, Id};
 
 use crate::protocol::{Message, Body, InitOkMsg, InitMsg};
-//./maelstrom/maelstrom test -w echo --bin ./target/debug/hydroflow-template.exe --time-limit 5
+//./maelstrom/maelstrom test -w unique-ids --bin ./target/debug/hydroflow-template.exe --time-limit 5
 
 fn create_init_ok((dest, body) : (String, InitMsg)) -> String {
     let message = Message {
@@ -22,7 +22,7 @@ fn create_gen_ok((msg_id, (node_id, (dest, body))) : (i32, (String, (String, Gen
         body: Body::generate_ok(GenerateOkMsg {
             msg_id: Some(msg_id),
             in_reply_to: body.msg_id,
-            id: format!("{},{}", node_id, msg_id)//Id {node_id, msg_id}
+            id: format!("{},{}", node_id, msg_id)
         })
     };
     serde_json::to_string(&message).unwrap()
@@ -51,12 +51,12 @@ async fn main() {
         //Save node id for later use
         node_id = init[1] -> map(|(_, body) : (_, InitMsg)| body.node_id);
         
-        //cross join node_id with echo channel
+        //cross join node_id with generate channel
         id_gen = cross_join();
         node_id       -> [0]id_gen;
         channels[gen] -> [1]id_gen;
 
-        //for each echo, generate a response
+        //for each generate request, generate a response
         id_gen -> enumerate() -> map(|x| create_gen_ok(x)) -> [1]out;
 
 
