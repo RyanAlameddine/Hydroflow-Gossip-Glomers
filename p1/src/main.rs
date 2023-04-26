@@ -53,7 +53,7 @@ async fn main() {
         node_id = init[1] -> map(|(_, body) : (_, InitMsg)| body.node_id);
         
         //cross join node_id with echo channel
-        id_echo = cross_join();
+        id_echo = cross_join::<'static, 'tick>();
         node_id        -> [0]id_echo;
         channels[echo] -> [1]id_echo;
 
